@@ -29,7 +29,35 @@ class BST
 
     root
   end
+
+  def find(value, root=@root)
+    return root if root.data == value
+
+    if value < root.data
+      find(value, root.left)
+    else
+      find(value, root.right)
+    end
+  end
+
+  def insert(value, root = @root)
+    if root.left && root.right
+      return root.left = Node.new(value) if value < root.data
+      return root.right = Node.new(value) if value > root.data
+    end
+
+    if value < root.data
+      insert(value, root.left)
+    else
+      insert(value, root.right)
+    end 
+  end
 end
 
 bulsheesh = BST.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
+
+p bulsheesh.root
+
+bulsheesh.insert(6555)
+
 p bulsheesh.root
