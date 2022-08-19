@@ -144,7 +144,7 @@ class BST
       values.push(node) if !block_given?
       yield node if block_given?
     end
-    
+
     return values
   end
 
@@ -242,13 +242,36 @@ class BST
     recursive_level_order(queue, values, &block)
   end
 
+  def height(node = @root, times = 0)
+    if node.nil?
+      return times - 1
+    end
+
+    leftheight = height(node.left, times + 1)
+    rightheight = height(node.right, times + 1)
+    
+    return [leftheight, rightheight].max
+  end
+
+  def depth(node, root = @root, times = 0)
+
+    if node == root.data
+      return times
+    end
+
+    if node < root.data
+      depth(node, root.left, times + 1)
+    else
+      depth(node, root.right, times + 1)
+    end
+  end
+
 end
 
 bulsheesh = BST.new([20,30,32,34,36,40,50,60,65,70,75,80])
 
 bulsheesh.pretty_print
 
-bulsheesh.inorder {|item| p item.data}
-
+p bulsheesh.depth(20)
 
 # [20,30,32,34,36,40,50,60,65,70,75,80] for future reference
