@@ -27,7 +27,7 @@ class Node
     return true if left && right
     false
   end
-
+  
   def get_child
     return left if left
     return right if right
@@ -56,10 +56,7 @@ class BST
     root
   end
 
-  # get child
-  
-
-  # fin the node
+  # find the node
   def find(value, root=@root)
     return root if root.data == value
 
@@ -99,7 +96,6 @@ class BST
 
   def delete(key, root = @root, last = nil)
     
-
     if root.data == key
       if root.leaf? && last.data < key
         return last.right = nil
@@ -128,12 +124,41 @@ class BST
     end
   end
 
-  def inorder(root = @root)
-    if !root.nil?
-      inorder(root.left)
-      p (root.data)
-      inorder(root.right)
+  # traverse the binary tree from the root then left then right.
+  def preorder(node = @root, values = [], &block)
+    if !node.nil?
+      yield node if block_given?
+      values.push if !block_given?
+      preorder(node.left, values, &block)
+      preorder(node.right, values, &block)
     end
+    
+    return values
+  end
+
+  # Postoder traversal  from left, right and last the node
+  def postorder(node = @root, values = [], &block)
+    if !node.nil?
+      postorder(node.left, values, &block)
+      postorder(node.right, values, &block)
+      values.push(node) if !block_given?
+      yield node if block_given?
+    end
+    
+    return values
+  end
+
+  # Inorder traversal from left then node then right
+  def inorder(node = @root, values = [], &block)
+
+    if !node.nil?
+      inorder(node.left, values, &block)
+      yield node if block_given?
+      values.push(node) if !block_given?
+      inorder(node.right, values, &block)
+    end
+
+    return values
   end
 
   # return the min value node in the tree
@@ -147,6 +172,7 @@ class BST
     current
   end
 
+  # return the max value node in the tree
   def max_valuenode(node = @root)
     current = node
 
@@ -193,11 +219,17 @@ class BST
     return values if !block_given?
   end
 
-  def recursive_level_oder(queue = [].push(root), &block)
-    return if queue.length < 1
+  def recursive_level_order(queue = [].push(root),values = [], &block)
+    if block_given? 
+      return if queue.length < 1
+    else
+      return values if queue.length < 1
+    end
+ 
+    yield queue.first if block_given?
 
-    yield queue.first 
-    
+    values.push(queue.first.data)
+
     if queue.first.left != nil
       queue.push(queue.first.left)
     end
@@ -207,7 +239,7 @@ class BST
     end
 
     queue.shift
-    recursive_level_oder(queue,&block)
+    recursive_level_order(queue, values, &block)
   end
 
 end
@@ -215,6 +247,8 @@ end
 bulsheesh = BST.new([20,30,32,34,36,40,50,60,65,70,75,80])
 
 bulsheesh.pretty_print
-bulsheesh.recursive_level_oder { |item| p item.data}
+
+bulsheesh.inorder {|item| p item.data}
 
 
+# [20,30,32,34,36,40,50,60,65,70,75,80] for future reference
