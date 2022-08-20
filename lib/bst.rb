@@ -247,10 +247,39 @@ class BST
       return times - 1
     end
 
+    if node.left.nil?
+      return height(node.right, times + 1)
+    elsif node.right.nil?
+      return height(node.left, times + 1)
+    end
+
     leftheight = height(node.left, times + 1)
     rightheight = height(node.right, times + 1)
-    
+
     return [leftheight, rightheight].max
+  end
+
+  def balanced?(node = @root, times = 0)
+    if node.nil?
+      return times - 1
+    end
+
+    if node.left.nil?
+      return height(node.right, times + 1)
+    elsif node.right.nil?
+      return height(node.left, times + 1)
+    end
+
+    leftheight = height(node.left, times + 1)
+    rightheight = height(node.right, times + 1)
+    rest = (leftheight - rightheight).abs
+    
+    if rest == 0 || rest == 1
+      true
+    else
+      false
+    end
+
   end
 
   def depth(node, root = @root, times = 0)
@@ -266,12 +295,25 @@ class BST
     end
   end
 
+  def rebalance(tree = @root)
+    if !balanced?(tree)
+      array = []
+      postorder(tree){|item| array.push(item.data)}
+    else
+      return "Tree is balanced already!"
+    end
+
+    new_tree = BST.new(array)
+
+    return new_tree.pretty_print
+  end
+  
 end
 
 bulsheesh = BST.new([20,30,32,34,36,40,50,60,65,70,75,80])
 
 bulsheesh.pretty_print
 
-p bulsheesh.depth(20)
+bulsheesh.rebalance
 
 # [20,30,32,34,36,40,50,60,65,70,75,80] for future reference
