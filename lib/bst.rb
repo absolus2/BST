@@ -305,15 +305,33 @@ class BST
 
     new_tree = BST.new(array)
 
-    return new_tree.pretty_print
+    return new_tree
   end
   
 end
 
-bulsheesh = BST.new([20,30,32,34,36,40,50,60,65,70,75,80])
+def driver_script
+  new_tree = BST.new((Array.new(15) { rand(1..100)}))
+  if new_tree.balanced?
+    new_tree.inorder {|item| p item.data}
+    new_tree.postorder {|item| p item.data}
+    new_tree.level_order {|item| p item.data}
+    new_tree.preorder {|item| p item.data}
+    new_tree.insert(120)
+    new_tree.insert(140)
+    new_tree.insert(200)
+  end
 
-bulsheesh.pretty_print
+  if !new_tree.balanced?
+    balanced = new_tree.rebalance
+    if balanced.balanced?
+      balanced.inorder {|item| p item.data}
+      balanced.postorder {|item| p item.data}
+      balanced.level_order {|item| p item.data}
+      balanced.preorder {|item| p item.data}
+    end
+  end
+end
 
-bulsheesh.rebalance
-
+driver_script
 # [20,30,32,34,36,40,50,60,65,70,75,80] for future reference
